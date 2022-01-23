@@ -4,7 +4,8 @@
 
 threadPools pools(std::thread::hardware_concurrency());
 
-std::string path = R"(C:\Users\Adrian\Documents\Nowyfolder)";
+std::string goodPath = R"(C:\Users\Adrian\Documents\Nowyfolder)";
+std::string wrongPath = R"(C:\Nowhere\to\go)";
 
 TEST(EmptyTaskShouldReturn0, empty)
 {
@@ -13,7 +14,7 @@ TEST(EmptyTaskShouldReturn0, empty)
 
 TEST(GivenTaskShouldHaveOccurence, occurence)
 {
-	listFilesWithThreads(path);
+	listFilesWithThreads(goodPath);
 
 	int total = pools.get_tasks();
 
@@ -22,28 +23,28 @@ TEST(GivenTaskShouldHaveOccurence, occurence)
 
 TEST(ValidPathWithDirectoryShouldHaveFilledCounter, filled_counter)
 {
-	countStats(path);
+	countStats(goodPath);
 	
 	ASSERT_TRUE(nrOf.howManyDirectories > 0);
 }
 
 TEST(ValidPathWithFileShouldHaveFilledCounter, filled_file)
 {
-	countStats(path);
+	countStats(goodPath);
 
 	ASSERT_TRUE(nrOf.howManyFiles > 0);
 }
 
 TEST(ValidPathWithEmptyLineShouldHaveFilledCounter, filled_line)
 {
-	countStats(path);
+	countStats(goodPath);
 
 	ASSERT_TRUE(nrOf.emptyLines > 0);
 }
 
 TEST(ValidPathWithNonEmptyLineShouldHaveFilledCounter, filled_empty_line)
 {
-	countStats(path);
+	countStats(goodPath);
 
 	ASSERT_TRUE(nrOf.nonEmptyLines > 0);
 }
@@ -53,14 +54,14 @@ TEST(NotValidPathShouldHaveEmptyCounter, empty_counter)
 
 	nrOf.howManyDirectories = 0;
 
-	countStats(path);
+	countStats(wrongPath);
 
 	ASSERT_TRUE(nrOf.howManyDirectories == 0);
 }
 
 TEST(ValidPathShouldListDirs, valid_dir)
 {
-	listFilesWithThreads(path);
+	listFilesWithThreads(goodPath);
 
 	ASSERT_TRUE(nrOf.nonEmptyLines > 0);
 }
@@ -69,7 +70,7 @@ TEST(NotValidPathShouldNotListDirs)
 {
 	nrOf.nonEmptyLines = 0;
 
-	countStats(path);
+	countStats(wrongPath);
 
 	ASSERT_TRUE(nrOf.nonEmptyLines = 0);
 }
